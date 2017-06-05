@@ -58,7 +58,7 @@ public class Node {
 
             i = 1;
             endOfCluster = (int) Math.pow(2.0, currentCluster - 1);
-            while(!testingClusterDone && i <= endOfCluster)
+            while(!testingClusterDone && i <= endOfCluster && HiADSDHelper.nthOfCluster(i, id, currentCluster) < maxId)
             {
                 //System.out.println("i: " + i + ", id: " + id + ",current: " + currentCluster + ", end: " + endOfCluster);
                 tempDiagTree = test(sim.getNcde(HiADSDHelper.nthOfCluster(i, id, currentCluster)), tempDiagTree);

@@ -34,11 +34,12 @@ public class Simulation {
     {
     }
 
-    public void runSimulation(int nodesNumer)
+    public void runSimulation(int nodesNumber)
     {
-        for(int i = 0 ; i < nodesNumer ; i++)
+        System.out.println("Number of clusters:" + (int) Math.ceil((double)Math.log(nodesNumber)/(double)Math.log(2)));
+        for(int i = 0 ; i < nodesNumber ; i++)
         {
-            nodes.add(new Node(i, nodesNumer, (int) Math.ceil(Math.log(nodesNumer)), this));
+            nodes.add(new Node(i, nodesNumber, (int) Math.ceil((double)Math.log(nodesNumber)/(double)Math.log(2)), this));
         }
 
         for(int i = 0 ; i < 1000 ; i++)
