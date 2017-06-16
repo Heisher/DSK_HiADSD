@@ -26,9 +26,46 @@ public class Simulation {
     {
         for (Node node : nodes)
         {
-            node.newTestingRound();
+            //node.newTestingRound();
+            node.doTestingRound();
         }
     }
+
+    public void singleStep()
+    {
+        for(Node node : nodes)
+        {
+            node.singleStep();
+        }
+    }
+
+    public void nSteps(int n)
+    {
+        for(int i = 0; i < n ; i++)
+        {
+            for(Node node : nodes)
+            {
+                node.singleStep();
+            }
+        }
+    }
+
+    public void doTestingRound()
+    {
+        for(Node node : nodes)
+        {
+            node.doTestingRound();
+        }
+    }
+
+    public void continueExecution()
+    {
+        for(Node node : nodes)
+        {
+            node.continueExecution();
+        }
+    }
+
 
     public Simulation()
     {

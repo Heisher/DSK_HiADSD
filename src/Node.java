@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.runtime.ECMAErrors;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -5,10 +7,21 @@ import java.util.List;
  * Created by Pawel on 21.05.2017.
  */
 public class Node {
+
+    public static int CONTINUE = 1;
+    public static int SINGLE_STEP = 2;
+    public static int DO_TESTING_ROUND = 3;
+
+    public static int EXECUTE = 1;
+    public static int WAIT = 2;
+
+    public int execution = WAIT;
+    public int mode = CONTINUE;
     public int id;
     public int maxId;
     public int numberOfClusters;
 
+    public int testedNodeNumber;
     public int roundsDone;
     public boolean readyToShare;
     public boolean testingRoundDone;
@@ -19,10 +32,12 @@ public class Node {
     public DiagnosticTree diagTree;
     public Simulation sim;
 
+
     public Node(int i, int N, int clusters, Simulation s) {
         id = i;
         maxId = N;
         numberOfClusters = clusters;
+        testedNodeNumber = 0;
         roundsDone = 0;
         readyToShare = true;
         testingRoundDone = false;
@@ -34,20 +49,40 @@ public class Node {
         initializeDiagnosticTree();
     }
 
-    public void newTestingRound()
+    public void doWait() throws Exception
+    {
+        wait(100);
+    }
+
+    public void newTestingRound() throws Exception
     {
         testingRoundDone = false;
         testingClusterDone = false;
+        while(execution == WAIT)
+        {
+            doWait();
+        }
         if(currentCluster < numberOfClusters)
             currentCluster++;
         else {
             currentCluster = 1;
             readyToShare = true;
         }
+        if(mode == SINGLE_STEP)
+        {
+            execution = WAIT;
+        }
         testingRound();
+        if(mode == DO_TESTING_ROUND)
+        {
+            while(execution == WAIT)
+            {
+                doWait();
+            }
+        }
     }
 
-    public void testingRound()
+    public void testingRound() throws Exception
     {
         DiagnosticTree tempDiagTree;
 
@@ -60,9 +95,18 @@ public class Node {
             endOfCluster = (int) Math.pow(2.0, currentCluster - 1);
             while(!testingClusterDone && i <= endOfCluster && HiADSDHelper.nthOfCluster(i, id, currentCluster) < maxId)
             {
+                while(execution == WAIT)
+                {
+                    doWait();
+                }
+                testedNodeNumber = HiADSDHelper.nthOfCluster(i, id, currentCluster);
                 //System.out.println("i: " + i + ", id: " + id + ",current: " + currentCluster + ", end: " + endOfCluster);
-                tempDiagTree = test(sim.getNcde(HiADSDHelper.nthOfCluster(i, id, currentCluster)), tempDiagTree);
+                tempDiagTree = test(sim.getNcde(testedNodeNumber), tempDiagTree);
                 i++;
+                if(mode == SINGLE_STEP)
+                {
+                    execution = WAIT;
+                }
             }
 
             if(tempDiagTree.nodeNumber >= 0) {
@@ -110,6 +154,29 @@ public class Node {
             }
         }
         return tempDiagTree;
+    }
+
+    public void singleStep()
+    {
+        execution = EXECUTE;
+        mode = SINGLE_STEP;
+    }
+
+    public void doTestingRound()
+    {
+        execution = EXECUTE;
+        mode = DO_TESTING_ROUND;
+    }
+
+    public void continueExecution()
+    {
+        execution = EXECUTE;
+        mode = CONTINUE;
+    }
+
+    public void pause()
+    {
+        execution = WAIT;
     }
 
     public void initializeDiagnosticTree() {
