@@ -58,28 +58,21 @@ public class Node {
     {
         testingRoundDone = false;
         testingClusterDone = false;
-        while(execution == WAIT)
-        {
-            doWait();
-        }
         if(currentCluster < numberOfClusters)
             currentCluster++;
         else {
             currentCluster = 1;
             readyToShare = true;
         }
-        if(mode == SINGLE_STEP)
+        if(mode == SINGLE_STEP || mode == DO_TESTING_ROUND)
         {
             execution = WAIT;
         }
-        testingRound();
-        if(mode == DO_TESTING_ROUND)
+        while(execution == WAIT)
         {
-            while(execution == WAIT)
-            {
-                doWait();
-            }
+            doWait();
         }
+        testingRound();
     }
 
     public void testingRound() throws Exception
@@ -95,11 +88,11 @@ public class Node {
             endOfCluster = (int) Math.pow(2.0, currentCluster - 1);
             while(!testingClusterDone && i <= endOfCluster && HiADSDHelper.nthOfCluster(i, id, currentCluster) < maxId)
             {
+                testedNodeNumber = HiADSDHelper.nthOfCluster(i, id, currentCluster);
                 while(execution == WAIT)
                 {
                     doWait();
                 }
-                testedNodeNumber = HiADSDHelper.nthOfCluster(i, id, currentCluster);
                 //System.out.println("i: " + i + ", id: " + id + ",current: " + currentCluster + ", end: " + endOfCluster);
                 tempDiagTree = test(sim.getNcde(testedNodeNumber), tempDiagTree);
                 i++;
