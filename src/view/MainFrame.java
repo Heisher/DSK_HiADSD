@@ -1,24 +1,30 @@
 package view;
 
+import controller.Simulation;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    JPanel treePanel;
+    TreePanel treePanel;
     JPanel simPanel;
     JSplitPane splitPane;
+
 
     public MainFrame(String title) throws HeadlessException {
         super(title);
         setupFrameAttributes();
-
         setupPanels();
         setupHorizontalSplitPane();
     }
 
+    private void setupNodes() {
+
+    }
+
     private void setupHorizontalSplitPane() {
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true, treePanel, simPanel);
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, treePanel, simPanel);
         splitPane.setContinuousLayout(true);
         splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(200);
@@ -45,8 +51,12 @@ public class MainFrame extends JFrame {
         }
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(800,600));
+        setPreferredSize(new Dimension(800, 600));
         pack();
         setLocationRelativeTo(null);
+    }
+
+    public void refreshDiagnosticTree(Simulation simulation, int nodeId) {
+        treePanel.refreshDiagnosticTree(simulation, nodeId);
     }
 }
