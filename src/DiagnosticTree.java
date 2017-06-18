@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,12 +16,27 @@ public class DiagnosticTree {
         nodeNumber = nNumber;
     }
 
+    public void printDTree(int depth)
+    {
+        System.out.println("node number: " + nodeNumber);
+        for(Map.Entry<Integer, DiagnosticTree> e : leaves.entrySet())
+        {
+            System.out.print("depth: " + depth + ", cluster number: " + e.getKey() + ", ");
+            e.getValue().printDTree(depth+1);
+        }
+    }
+
     public void setLeaf(Integer cNumber, DiagnosticTree dTree)
     {
         if(leaves.containsKey(cNumber))
             leaves.replace(cNumber, dTree);
         else
             leaves.put(cNumber, dTree);
+    }
+
+    public void removeLeaf(int i)
+    {
+        leaves.remove(i);
     }
 
     public DiagnosticTree getLeaf(int i)
@@ -41,32 +58,45 @@ public class DiagnosticTree {
     // there may be duplicate data on nodes that were repaired recently
     public void putRepaired(Integer numberOfRepaired, Integer cNumber, DiagnosticTree dTree)
     {
-        if(numberOfRepaired == 0)
+        if(numberOfRepaired == 1)
             setLeaf(cNumber, dTree);
         else
-            getLeaf(cNumber).putRepaired(numberOfRepaired - 1, 0, dTree); //
+            getLeaf(cNumber).putRepaired(numberOfRepaired - 1, 0, dTree);
     }
 
     public DiagnosticTree putRepairedOrBuild(Integer numberOfRepaired, Integer cNumber, DiagnosticTree dTree)
     {
         if(numberOfRepaired == 0)
             return dTree;
-        putRepaired(numberOfRepaired, cNumber, dTree);
+        putRepaired(numberOfRepaired, 0, dTree);
         return this;
     }
 
     public void initialize(int maxId, int numberOfClusters)
     {
-        int i;
-        for(int currCluster = 1 ; currCluster < numberOfClusters ; currCluster++)
+        for(int currCluster = 1 ; currCluster <= numberOfClusters ; currCluster++)
         {
-            i = 0;
             int node = HiADSDHelper.firstOfCluster(nodeNumber, currCluster);
             if(node<maxId) {
                 setLeaf(currCluster, new DiagnosticTree(node));
                 getLeaf(currCluster).initialize(maxId, currCluster - 1);
             }
-            i++;
+            else {
+                Boolean found = false;
+                int i = 2;
+                int clusterSize = (int) Math.pow(2, currCluster-1);
+                while(i <= clusterSize && !found)
+                {
+                    node = HiADSDHelper.nthOfCluster(i, nodeNumber, currCluster);
+                    if(node<maxId)
+                    {
+                        setLeaf(currCluster, new DiagnosticTree(node));
+                        getLeaf(currCluster).initialize(maxId, currCluster - 1);
+                        found = true;
+                    }
+                    i++;
+                }
+            }
         }
     }
 

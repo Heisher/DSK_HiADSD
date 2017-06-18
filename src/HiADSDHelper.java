@@ -9,8 +9,8 @@ public class HiADSDHelper {
     /// Used for checking if node nNumber is an end of a cluster for node id
     public static boolean isAnEndOfCluster(int id, int nNumber, int cNumber)
     {
-        int twoToS = (int) Math.pow(2, cNumber);
-        return nNumber == nthOfCluster(twoToS / 2 - 1, id, cNumber);
+        int twoToS = (int) Math.pow(2, cNumber -1);
+        return nNumber == nthOfCluster(twoToS, id, cNumber);
     }
 
     public static boolean isTheFirstOfCluster(int id, int nNumber, int cNumber)
