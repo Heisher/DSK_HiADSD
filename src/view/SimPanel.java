@@ -131,6 +131,9 @@ public class SimPanel extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 simulation = new Simulation();
                 steps = 0;
+             //    simulation.setupNodes(((Number)nodesNumberTextField.getValue()).intValue());
+            //    Thread simThread = new Thread(simulation);
+            //    simThread.run();
                 simulation.runSimulation(((Number)nodesNumberTextField.getValue()).intValue());
                 refreshNodes();
                 testsLabel.setText("steps: " + steps);
