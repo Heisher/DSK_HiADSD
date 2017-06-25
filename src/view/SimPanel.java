@@ -215,10 +215,6 @@ public class SimPanel extends JPanel implements ActionListener {
         steps++;
         testsLabel.setText("steps: " + steps);
         System.out.println("steps: " + steps);
-        for (Node node : simulation.nodes) {
-            System.out.print(node.id + ", ");
-        }
-        System.out.println("");
 
         if(selectedNodeId != -1){
             faultyCheckBox.setSelected(simulation.getNcde(selectedNodeId).faulty);
@@ -271,6 +267,7 @@ public class SimPanel extends JPanel implements ActionListener {
     private void buttonAction(JButton button) {
         selectedNodeId = Integer.valueOf(button.getText());
         faultyCheckBox.setSelected(simulation.getNcde(selectedNodeId).faulty);
+        //simulation.getNcde(selectedNodeId).printDiagTree();
         nodeName.setText("Node name: " + selectedNodeId);
         mainFrame.refreshDiagnosticTree(simulation, Integer.valueOf(button.getText()));
     }

@@ -204,7 +204,7 @@ public class Simulation {
         System.out.println("Done");
 
 
-        nodes.get(0).printDiagTree();
+        //nodes.get(0).printDiagTree();
 
         //printDTrees();
     }
