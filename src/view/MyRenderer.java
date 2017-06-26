@@ -25,7 +25,7 @@ public class MyRenderer  extends DefaultTreeCellRenderer {
                 tree, value, sel,
                 expanded, leaf, row,
                 hasFocus);
-        if (leaf && isTutorialBook(value)) {
+        if (isNode(value)) {
             setIcon(tutorialIcon);
             setToolTipText("This book is in the Tutorial series.");
         } else {
@@ -35,11 +35,14 @@ public class MyRenderer  extends DefaultTreeCellRenderer {
         return this;
     }
 
-    protected boolean isTutorialBook(Object value) {
-//        DefaultMutableTreeNode node =
-//                (DefaultMutableTreeNode)value;
-//        BookInfo nodeInfo =
-//                (BookInfo)(node.getUserObject());
+    protected boolean isNode(Object value) {
+        String val = String.valueOf(value);
+        if(val.substring(0, 1).matches("\\*")){
+            return true;
+        }
+
+//        DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+//        String nodeInfo = (String)(node.getUserObject());
 //        String title = nodeInfo.bookName;
 //        if (title.indexOf("Tutorial") >= 0) {
 //            return true;

@@ -6,6 +6,7 @@ import controller.Simulation;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 import java.util.*;
 
@@ -93,14 +94,23 @@ public class TreePanel extends JPanel{
 
         rootTreeNode = new TreeNode();
         rootTreeNode.nodeNumber = nodeId;
-        rootTreeNode.nodeHandler = new DefaultMutableTreeNode(nodeId);
+        rootTreeNode.nodeNumber = nodeId;
+        rootTreeNode.nodeHandler = new DefaultMutableTreeNode("*" + nodeId);
 
         treeNodeList = new ArrayList<>();
         addNode(1);
         addTreeNodes();
 
         ToolTipManager.sharedInstance().registerComponent(tree);
+
+
+
+
         tree = new JTree(rootTreeNode.nodeHandler);
+        ImageIcon tutorialIcon = createImageIcon("src/images/node.png");
+        if (tutorialIcon != null) {
+            tree.setCellRenderer(new MyRenderer(tutorialIcon));
+        }
         expandAllNodes(0, tree.getRowCount());
     }
 
@@ -133,10 +143,31 @@ public class TreePanel extends JPanel{
                             break;
                         }
                     }
+                }else if(treeNode.depth < treeNodeList.get(i-1).depth){
+                    int j = i-2;
+                    while(true){
+                        if(treeNodeList.get(j).depth >= treeNode.depth){
+                            j--;
+                        }else{
+                            treeNodeList.get(j).nodeHandler.add(treeNode.clusterHandler);
+                            break;
+                        }
+                    }
                 }
-
             }
             System.out.println("d:" + treeNode.depth + " ,c:" + treeNode.clusterNumber + " ,n:" + treeNode.nodeNumber);
         }
+    }
+
+    protected ImageIcon createImageIcon(String path) {
+        ImageIcon icon = new ImageIcon("images/node.png");
+//        java.net.URL imgURL = getClass().getResource(path);
+//        if (imgURL != null) {
+//            return new ImageIcon(imgURL);
+//        } else {
+//            System.err.println("Couldn't find file: " + path);
+//            return null;
+//        }
+        return icon;
     }
 }

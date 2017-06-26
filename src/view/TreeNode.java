@@ -17,7 +17,7 @@ public class TreeNode {
         this.clusterNumber = clusterNumber;
         this.nodeNumber = nodeNumber;
         clusterHandler = new DefaultMutableTreeNode(clusterNumber);
-        nodeHandler = new DefaultMutableTreeNode(nodeNumber);
+        nodeHandler = new DefaultMutableTreeNode("*" + nodeNumber);
         clusterHandler.add(nodeHandler);
     }
 }
