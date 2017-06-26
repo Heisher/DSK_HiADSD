@@ -99,6 +99,7 @@ public class TreePanel extends JPanel{
         addNode(1);
         addTreeNodes();
 
+        ToolTipManager.sharedInstance().registerComponent(tree);
         tree = new JTree(rootTreeNode.nodeHandler);
         expandAllNodes(0, tree.getRowCount());
     }

@@ -221,6 +221,7 @@ public class SimPanel extends JPanel implements ActionListener {
 
         if(selectedNodeId != -1){
             faultyCheckBox.setSelected(simulation.getNcde(selectedNodeId).faulty);
+            mainFrame.refreshDiagnosticTree(simulation, selectedNodeId);
         }
 
         simulation.singleStep();
